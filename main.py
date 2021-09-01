@@ -47,14 +47,30 @@ class TypingTest():
         while True:
             if self.timeSince(self.lastKeyTime) >= self.timeout:
                 self.active = False
+            self.wordsStr = str(self.words)
+            self.timeStr = str(round(self.elapsedTime, 2))
+            self.wordsPerMinStr = str(round((self.words / self.elapsedTime) * 60, 2)) if self.elapsedTime != 0 else 0
+            self.errorRateStr = str(round((self.backspaces / self.keyPresses) * 100, 2)) if self.keyPresses != 0 else 0
+            print('{:>5}'.format(self.wordsStr) + '\t' +
+                  '{:>4}'.format(self.timeStr) + '\t' +
+                  '{:>9}'.format(self.wordsPerMinStr) + '\t' +
+                  '{:>12}'.format(self.errorRateStr) + '\t' +
+                  str(self.active) + ' ',
+                  end='\r')
 
 
 if __name__ == '__main__':
-    test = TypingTest()
+    typingTest = TypingTest(5)
     try:
-        test.start()
+        print('words\ttime\twords/min\t% error rate\tactive')
+        typingTest.start()
     except KeyboardInterrupt:
-        print(str(test.words) + ' words')
-        print(str(round(test.elapsedTime, 2)) + ' secs')
-        print(str(round((test.words/test.elapsedTime)*60, 2)) + ' words/min')
-        print(str(round((test.backspaces/test.keyPresses)*100, 2)) + '% error rate')
+        wordsStr = str(typingTest.words)
+        timeStr = str(round(typingTest.elapsedTime, 2))
+        wordsPerMinStr = str(round((typingTest.words / typingTest.elapsedTime) * 60, 2)) if typingTest.elapsedTime != 0 else 0
+        errorRateStr = str(round((typingTest.backspaces / typingTest.keyPresses) * 100, 2)) if typingTest.keyPresses != 0 else 0
+        print('\n')
+        print(wordsStr + ' words')
+        print(timeStr + ' secs')
+        print(wordsPerMinStr + ' words/min')
+        print(errorRateStr + '% error rate')
