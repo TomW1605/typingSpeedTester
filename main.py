@@ -3,7 +3,7 @@ import time
 from pynput import keyboard
 from pynput.keyboard import Key, KeyCode
 
-class TypingTest():
+class TypingTest:
     lastKeyTime = 0
     elapsedTime = 0
     keyPresses = 0
@@ -30,9 +30,9 @@ class TypingTest():
     def on_press(self, key):
         #print(self.get_char(key))
         self.keyPresses += 1
-        if self.get_char(key) in [49, 36]:
+        if self.get_char(key) in [49, 36, 32, 9, 13]:
             self.words += 1
-        if self.get_char(key) == 51:
+        if self.get_char(key) in [51, 8]:
             self.backspaces += 1
         if self.lastKeyTime != 0 and self.active:
             self.elapsedTime += self.timeSince(self.lastKeyTime)
