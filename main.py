@@ -30,14 +30,15 @@ class TypingTest:
     def on_press(self, key):
         #print(self.get_char(key))
         self.keyPresses += 1
-        if self.get_char(key) in [49, 36, 32, 9, 13]:
-            self.words += 1
-        if self.get_char(key) in [51, 8]:
-            self.backspaces += 1
         if self.lastKeyTime != 0 and self.active:
             self.elapsedTime += self.timeSince(self.lastKeyTime)
         self.lastKeyTime = time.time()
         self.active = True
+        if self.get_char(key) in [49, 36, 32, 9, 13]:
+            self.words += 1
+            self.active = False
+        if self.get_char(key) in [51, 8]:
+            self.backspaces += 1
 
     def start(self):
         listener = keyboard.Listener(
