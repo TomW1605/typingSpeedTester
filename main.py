@@ -4,12 +4,16 @@ from pynput import keyboard
 from pynput.keyboard import Key, KeyCode
 
 class TypingTest:
+    wordSeparators = [49, 36, 32, 9, 13]
+    backspace = [51, 8]
+
     lastKeyTime = 0
     elapsedTime = 0
     keyPresses = 0
     backspaces = 0
     words = 0
     active = False
+    lastKey = 0
 
     def __init__(self, timeout=10) -> None:
         self.timeout = timeout
@@ -29,16 +33,20 @@ class TypingTest:
 
     def on_press(self, key):
         #print(self.get_char(key))
-        self.keyPresses += 1
-        if self.lastKeyTime != 0 and self.active:
-            self.elapsedTime += self.timeSince(self.lastKeyTime)
-        self.lastKeyTime = time.time()
-        self.active = True
-        if self.get_char(key) in [49, 36, 32, 9, 13]:
+        if self.active and self.get_char(key) in self.wordSeparators and self.lastKey not in self.wordSeparators:
             self.words += 1
-            self.active = False
-        if self.get_char(key) in [51, 8]:
+
+        if self.get_char(key) in self.backspace:
             self.backspaces += 1
+
+        if self.lastKey not in self.wordSeparators or self.get_char(key) not in self.wordSeparators:
+            if self.active and self.lastKeyTime != 0:
+                self.elapsedTime += self.timeSince(self.lastKeyTime)
+            self.lastKeyTime = time.time()
+            self.keyPresses += 1
+
+        self.lastKey = self.get_char(key)
+        self.active = True
 
     def start(self):
         listener = keyboard.Listener(
